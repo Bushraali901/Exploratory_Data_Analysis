@@ -1,9 +1,12 @@
 ---
 title: "Exploratory Data Analysis"
-author: "Sana Rasheed"
-date: "October 20, 2020"
+author: "Bushra ALI"
+date: "December 13, 2021"
 output: html_document
 ---
+```{r}
+
+```
 
 ##### NOTE: 
 1. Change author name and date to your exercise submission date in above section
@@ -28,11 +31,26 @@ head(airquality)
 
 ```{r }
 # START YOUR CODE FROM HERE
+# Using the airquality dataset, generate the five-point summary through the appropriate function.
+summary(airquality$Solar.R)
 ```
 
 
 ```{r }
+#Visualize the data for temperature through histogram. Add color and labels
+hist(airquality$Temp,col='pink',xlab='temperature',ylab='frequency',main="Temperature in cities")
+```
 
+```{r}
+#Visualize the distribution of data for Wind. Add colors and labels
+boxplot(airquality$Wind,col="purple",xlab='Wind',ylab='frequency',main="distribution of data for wind")
+```
+
+```{r}
+ #Visualize the relationship between Solar.R and Ozone. Use scatterplot and circular red markers to identify the points.
+with(airquality,plot(Solar.R,Ozone,main = "Relationship between Solar.R AND OZONE",
+     xlab = "Solar", ylab = "Ozone",
+     pch = 19, frame = FALSE,col="red"))
 ```
 
 ### Good Job! You have completed this section!
@@ -56,16 +74,31 @@ library(lattice)
 library(ggplot2)
 
 head(state.x77)
-#head(state.region)
+head(state.region)
 ```
 
 ```{r }
 # START YOUR CODE FROM HERE
+#Using the state.x77 and state.region datasets, visualize the relationship between Income and illiteracy.
+state<-data.frame(state.x77,region=state.region)
+plot<-qplot(Income,Illiteracy,data=state,main="Relationship between Income and illiteracy.")
+plot
 ```
 
 
 ```{r }
+#Visualize the relationship between Population, region and life expectancy (Life.Exp)
+state<-data.frame(state.x77,region=state.region)
+xyplot(Population ~ Life.Exp | region, data=state,layout=c(4,1))
 
+
+```
+
+```{r}
+#Export the charts to a pdf file.
+pdf("plot-1.pdf")
+print(plot)
+dev.off()
 ```
 
 
@@ -83,10 +116,23 @@ head(women)
 
 ```{r }
 # START YOUR CODE FROM HERE
+#Using the visualize the relationship between height and weight from the women dataset
+plot<-qplot(height,weight,data=women)
+plot
 ```
 
 ```{r }
+#Is there a strong correlation between the two quantities?
+co_cof<-lm(height~weight,data=women)
+co_cof
+```
 
+```{r}
+
+# Compute correlation coefficient and fit a linear regression model""
+with(women,plot(weight,height,main="height and weight in newyork",pch=20,xlab="weight",ylab="height",col="red"))
+
+abline(co_cof,lwd = 2,lty =25,col="green")
 ```
 
 ### Good Job! You have completed this section!
@@ -115,18 +161,31 @@ head(longley)
 
 ```{r }
 # START YOUR CODE FOR GRAPH-1
+#Using the longley dataset, plot the relationship between Unemployed and GNP.
+library(ggplot2)
 
+graph <- ggplot(longley,aes(Unemployed,GNP))
+graph + geom_point() + labs(title = "GNP Vs Unemployed")
 ```
 
 ```{r }
 # START YOUR CODE fFOR GRAPH-2
+#2. As a scatter plot, plot out Unemployed values as blue dots and Employed values as green dots.
+x<-ggplot(longley,aes(Unemployed,Employed))
+plot(longley$Population,longley$Employed,type = "p",ylim = c(59,480),col = 2,pch = 19,main = "Employed Vs Unemployed",xlab = "Population" ,ylab = "Counts")
+
+points(longley$Population,longley$Unemployed,type = "p", col = 4, pch = 19)
+legend("topright",pch = 19,col = c("blue","red"),legend = c("Unemployed","Employed"))
+
 
 ```
 
 ```{r }
 # START YOUR CODE FOR GRAPH-3
+#Create a new variable as a column known as Armed.Forces.Unemployed.Rel. In it, place a Y for when the number of armed forces are greater than unemployed and N otherwise. Plot a graph to show the relationship between unemployed and armed forces and use the Armed.Forces.Unemployed.Rel for aesthetics and color.
+ Armed.Forces.Unemployed.Rel<-ifelse(longley$Armed.Forces>longley$Unemployed,"Y","N")
+ Armed.Forces.Unemployed.Rel
+g<-ggplot(longley,aes(Armed.Forces,Unemployed))
+g+geom_point(aes(color = Armed.Forces.Unemployed.Rel),size = 4,alpha = 1/2)+
+labs(title = "Unemployed Vs Armed Forces")
 
-```
-
-
-### Congratulations! You have successfully completed this course and practice exercises!
